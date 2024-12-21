@@ -1,0 +1,9 @@
+.venv/
+output/
+.python-version
+.gitignore
+README.md
+uv.lock
+pyproject.toml
+tests/
+makefile
