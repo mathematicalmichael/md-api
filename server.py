@@ -13,6 +13,8 @@ from markitdown._markitdown import UnsupportedFormatException
 
 tracemalloc.start()
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG")
+NUM_API_SERVERS = int(os.environ.get("NUM_API_SERVERS", 4))
+
 # Set up logging
 logging.basicConfig(
     level=logging.DEBUG,
@@ -74,4 +76,9 @@ if __name__ == "__main__":
         track_requests=True,
         api_path="/convert",
     )
-    server.run(port=8000, host="0.0.0.0", log_level=LOG_LEVEL.lower())
+    server.run(
+        port=8000,
+        host="0.0.0.0",
+        num_api_servers=NUM_API_SERVERS,
+        log_level=LOG_LEVEL.lower(),
+    )
