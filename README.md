@@ -78,6 +78,21 @@ if __name__ == "__main__":
 
 ```
 
+For local data:
+```
+curl -X POST -F "content=@tests/test_rss.xml;filename=test_rss.xml" http://127.0.0.1:8000/convert
+```
+
+For remote data:
+```
+curl --request POST \
+    --url http://0.0.0.0:8000/convert \
+    --header 'Content-Type: application/json' \
+    --data '{
+        "content": "https://wikipedia.org"
+    }'
+```
+
 ## Contributing
 
 Contributions are welcome!
