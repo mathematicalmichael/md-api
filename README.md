@@ -47,20 +47,24 @@ def send_request(path):
         # passing a URL for markdownit to scrape
         response = requests.post(API_URL, json={"content": path})
     if response.status_code == 200:
-        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S").lower()
-        Path("output").mkdir(exist_ok=True)
-        filename = f"output/{timestamp}.md"
-
-        with open(filename, "wb") as output_file:
-            output = json.loads(response.content)["output"]
-            output = output.encode("utf-8")
-            output_file.write(output)
-
-        print(f"File saved to {filename}")
+        output = json.loads(response.content)["output"]
+        save_output(output)
     else:
         print(
             f"Error: Response with status code {response.status_code} - {response.text}"
         )
+
+
+def save_output(output):
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S").lower()
+    Path("output").mkdir(exist_ok=True)
+    filename = f"output/{timestamp}.md"
+
+    with open(filename, "wb") as output_file:
+        output = output.encode("utf-8")
+        output_file.write(output)
+
+    print(f"File saved to {filename}")
 
 
 if __name__ == "__main__":
