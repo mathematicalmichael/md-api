@@ -19,6 +19,8 @@ tests/:
 
 test: tests/
 	uv run client.py --path tests/test_files.zip
+	uv run client.py --path https://wikipedia.org
+	./test.sh
 
 docker-test: build tests/
 	mkdir -p output/

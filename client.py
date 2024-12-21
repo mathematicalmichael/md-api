@@ -9,12 +9,15 @@ API_URL = "http://127.0.0.1:8000/convert"
 
 
 def send_request(path):
-    with open(path, "rb") as inputFile:
-        # Use a tuple (filename, file object) for 'files'
-        response = requests.post(
-            API_URL, files={"content": (Path(path).name, inputFile)}
-        )
-
+    try:
+        with open(path, "rb") as inputFile:
+            # Use a tuple (filename, file object) for 'files'
+            response = requests.post(
+                API_URL, files={"content": (Path(path).name, inputFile)}
+            )
+    except FileNotFoundError:
+        # passing a URL for markdownit to scrape
+        response = requests.post(API_URL, json={"content": path})
     if response.status_code == 200:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S").lower()
         Path("output").mkdir(exist_ok=True)

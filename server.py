@@ -12,7 +12,7 @@ from markitdown import MarkItDown
 from markitdown._markitdown import UnsupportedFormatException
 
 tracemalloc.start()
-LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
+LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG")
 # Set up logging
 logging.basicConfig(
     level=logging.DEBUG,
@@ -26,16 +26,25 @@ class SimpleLitAPI(ls.LitAPI):
         self.md = MarkItDown()
 
     def decode_request(self, request):
-        file_obj = request["content"].file
+        file_obj = request["content"]
         try:
-            file_bytes = file_obj.read()
+            logger.info("Processing file")
+            file_bytes = file_obj.file.read()
             filename = request["content"].filename  # Extract filename from the request
             return file_bytes, filename
+        except AttributeError:
+            if "http" in file_obj:
+                logger.info("Processing URL")
+                return None, file_obj
         finally:
-            file_obj.close()  # Explicitly close the file object
+            if not isinstance(file_obj, str):
+                file_obj.file.close()  # Explicitly close the file object
 
     def predict(self, file_data_and_name):
         file_data, original_filename = file_data_and_name
+        if file_data is None:
+            logger.debug(f"Using {original_filename}")
+            return self.md.convert(original_filename).text_content
         file_ext = os.path.splitext(original_filename)[1]
         # md.convert wants a file path. we are receiving
         # a request, so we need to make it look like its on disk
