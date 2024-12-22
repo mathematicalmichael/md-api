@@ -21,6 +21,7 @@ test: tests/
 	uv run client.py --path tests/test_files.zip
 	uv run client.py --path https://wikipedia.org
 	./test.sh
+	curl -X POST -F "content=@tests/test_rss.xml;filename=test_rss.xml" http://127.0.0.1:8000/convert
 
 docker-test: build tests/
 	mkdir -p output/
