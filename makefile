@@ -52,6 +52,7 @@ push: tag
 
 clean:
 	rm -rf output/ tests/
+	rm -rf ~/.docker/config.json
 
 env:
 	rm -rf .venv/
