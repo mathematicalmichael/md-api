@@ -1,7 +1,7 @@
 # litserve Implementation of Microsoft markitdown
 
 This exposes `markitdown` via API on port 8000 at `/convert`.
-The docker image is published at `mathematicalmichael/md-api:latest`
+The docker image is published at `mathematicalmichael/md-api:latest` [docker-hub](https://hub.docker.com/r/mathematicalmichael/md-api)
 
 ## Usage
 Make sure you have installed `uv`: `pip install uv` first, or modify the `makefile` appropriately for your environment.
@@ -37,12 +37,15 @@ API_URL = "http://127.0.0.1:8000/convert"
 
 
 def send_request(path):
-    with open(path, "rb") as inputFile:
-        # Use a tuple (filename, file object) for 'files'
-        response = requests.post(
-            API_URL, files={"content": (Path(path).name, inputFile)}
-        )
-
+    try:
+        with open(path, "rb") as inputFile:
+            # Use a tuple (filename, file object) for 'files'
+            response = requests.post(
+                API_URL, files={"content": (Path(path).name, inputFile)}
+            )
+    except FileNotFoundError:
+        # passing a URL for markdownit to scrape
+        response = requests.post(API_URL, json={"content": path})
     if response.status_code == 200:
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S").lower()
         Path("output").mkdir(exist_ok=True)
@@ -68,6 +71,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     send_request(args.path)
+
 ```
 
 ## Contributing
