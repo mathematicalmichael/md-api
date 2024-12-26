@@ -23,7 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-class SimpleLitAPI(ls.LitAPI):
+class DocumentConversionAPI(ls.LitAPI):
     def setup(self, device):
         self.md = MarkItDown()
 
@@ -44,24 +44,27 @@ class SimpleLitAPI(ls.LitAPI):
 
     def predict(self, file_data_and_name):
         file_data, original_filename = file_data_and_name
-        if file_data is None:
+        if file_data is None:  # URL support
             logger.debug(f"Using {original_filename}")
             return self.md.convert(original_filename).text_content
         file_ext = os.path.splitext(original_filename)[1]
-        # md.convert wants a file path. we are receiving
-        # a request, so we need to make it look like its on disk
-        # use tempfile to create a file-like object
-        # `NamedTemporaryFile` will handle cleanup after the `with` block
         try:
-            with tempfile.NamedTemporaryFile(delete=True, suffix=file_ext) as f:
-                f.write(file_data)
-                f.flush()  # Ensure all data is written to the file
-                filename = f.name
-                logger.debug(f"{filename=}, {file_ext=}")
-                result = self.md.convert(filename)
-                output = result.text_content
+            output = self.extract_text(file_data, file_ext)
         except UnsupportedFormatException:
             output = "Unsupported format"
+        return output
+
+    def extract_text(self, file_data, file_ext):
+        # md.convert wants a file path. we are receiving
+        # a request, so we need to make it look like its on disk
+        output = "None"
+        with tempfile.NamedTemporaryFile(delete=True, suffix=file_ext) as f:
+            f.write(file_data)
+            f.flush()  # Ensure all data is written to the file
+            filename = f.name
+            logger.debug(f"{filename=}, {file_ext=}")
+            result = self.md.convert(filename)
+            output = result.text_content
         return output
 
     def encode_response(self, output):
@@ -70,7 +73,7 @@ class SimpleLitAPI(ls.LitAPI):
 
 if __name__ == "__main__":
     server = ls.LitServer(
-        SimpleLitAPI(),
+        DocumentConversionAPI(),
         accelerator="auto",
         max_batch_size=1,
         track_requests=True,
