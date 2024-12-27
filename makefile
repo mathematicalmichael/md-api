@@ -46,13 +46,13 @@ debug:
 		bash
 
 tag: build
-	docker tag md-api:latest mathematicalmichael/md-api:$$(date +%Y%m%d)
-	docker tag md-api:latest mathematicalmichael/md-api:latest
+	docker tag md-api:latest mindthemath/md-api:$$(date +%Y%m%d)
+	docker tag md-api:latest mindthemath/md-api:latest
 	docker images
 
 push: tag
-	docker push mathematicalmichael/md-api:$$(date +%Y%m%d)
-	docker push mathematicalmichael/md-api:latest
+	docker push mindthemath/md-api:$$(date +%Y%m%d)
+	docker push mindthemath/md-api:latest
 
 clean:
 	rm -rf output/ tests/
