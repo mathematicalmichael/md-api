@@ -36,8 +36,8 @@ jobs:
 
       - name: Run tests
         run: |
-          make run &
-          make docker-test
+          NUM_API_SERVERS=1 make run &
+          sleep 5 && make docker-test
 
       - name: Push Docker image
         if: github.event_name != 'pull_request'
