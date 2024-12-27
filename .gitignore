@@ -11,3 +11,6 @@ wheels/
 output/
 tests/
 .vscode/
+*.png
+*.jpg
+*.webp
