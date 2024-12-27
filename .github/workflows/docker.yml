@@ -35,7 +35,9 @@ jobs:
         run: make build
 
       - name: Run tests
-        run: make docker-test
+        run: |
+          make run &
+          make docker-test
 
       - name: Push Docker image
         if: github.event_name != 'pull_request'
