@@ -12,6 +12,9 @@ run: build
 	docker run --rm -p 8000:8000 md-api
 
 # files pulled from microsoft/markdownit repo
+test-img:
+	curl -X POST -F "content=@logo.png;filename=logo.png" http://127.0.0.1:8000/convert
+
 tests/:
 	git clone https://github.com/microsoft/markitdown.git
 	cp -r markitdown/tests/test_files/ tests/
@@ -25,7 +28,7 @@ test: tests/
 
 docker-test: build tests/
 	mkdir -p output/
-	docker run --rm -ti --network=host \
+	docker run --rm --network=host \
 		-v ./output:/app/output:rw \
 		-v ./tests:/tests:ro \
 		-v ./client.py:/app/client.py:ro \
