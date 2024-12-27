@@ -28,7 +28,7 @@ test: tests/
 
 docker-test: build tests/
 	mkdir -p output/
-	docker run --rm -ti --network=host \
+	docker run --rm --network=host \
 		-v ./output:/app/output:rw \
 		-v ./tests:/tests:ro \
 		-v ./client.py:/app/client.py:ro \
