@@ -1,3 +1,6 @@
+[![Build and Push Docker Image](https://github.com/mathematicalmichael/md-api/actions/workflows/docker.yml/badge.svg)](https://github.com/mathematicalmichael/md-api/actions/workflows/docker.yml)
+[![Docker Image](https://img.shields.io/docker/v/mindthemath/md-api/latest)](https://hub.docker.com/r/mindthemath/md-api/tags)
+
 # litserve Implementation of Microsoft markitdown
 
 This exposes `markitdown` via API on port 8000 at `/convert`.

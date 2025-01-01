@@ -3,8 +3,18 @@ name: Build and Push Docker Image
 on:
   push:
     branches: [ main ]
+    paths:
+      - Dockerfile
+      - pyproject.toml
+      - server.py
+      - .github/workflows/docker.yml
   pull_request:
     branches: [ main ]
+    paths:
+      - Dockerfile
+      - pyproject.toml
+      - server.py
+      - .github/workflows/docker.yml
   # Allow manual triggers
   workflow_dispatch:
 
